@@ -19,7 +19,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::sendSleepSingals()
 {
-    ui->counter->setText("00:00:00");
     _timer->stop();
     _counterUpdate->stop();
     ui->pushButton->setEnabled(true);
@@ -52,7 +51,7 @@ void MainWindow::on_pushButton_clicked()
     _counterUpdate->start(1000);
     _timer->start();
 
-    ui->counter->setText(remainingTime());
+    updateDisplay();
 
     connect(_timer, &QTimer::timeout, this, &MainWindow::sendSleepSingals);
     ui->pushButton->setEnabled(false);
@@ -78,17 +77,17 @@ QString MainWindow::remainingTime()
     QTime time(0,0,0,0);
     time = time.addMSecs(miliseconds);
 
-    if (miliseconds < (1000 * 60))
-    { // if less than 60 seconds
-
+    // if less than 60 seconds
+    if (miliseconds < secToMiliSecs)
+    {
         writeTime = "00:00:" + prependZero(time.second());
     }
-    else if (miliseconds < (1000 * 60 * 60))
+    else if (miliseconds < minToMiliSecs)
     {
         writeTime = "00:" + prependZero(time.minute()) + ":" + prependZero(time.second());
     }
-    else
-    { //longer than one hour
+    else //longer than one hour
+    {
         writeTime = prependZero(time.hour()) + ":" + prependZero(time.minute()) + ":" + prependZero(time.second());
     }
 

@@ -20,6 +20,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    const int secToMiliSecs = 1000 * 60;
+    const int minToMiliSecs = 1000 * 60 * 60;
+
     QString prependZero(int val);
     QString remainingTime();
 
