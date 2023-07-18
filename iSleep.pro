@@ -29,10 +29,16 @@ CONFIG+=sdk_no_version_check
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        sleeptimer.cpp \
+        stopwatch.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+        sleeptimer.h \
+        stopwatch.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        sleeptimer.ui \
+        stopwatch.ui

@@ -2,11 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
-#include <QDebug>
-#include <QChart>
 #include <QResizeEvent>
-#include <QTime>
+#include <sleeptimer.h>
+
 
 namespace Ui {
 class MainWindow;
@@ -20,28 +18,28 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    const int secToMiliSecs = 1000 * 60;
-    const int minToMiliSecs = 1000 * 60 * 60;
-
-    QString prependZero(int val);
-    QString remainingTime();
-
 
 public slots:
-    void sendSleepSingals();
-    void updateDisplay();
+    void digitalClock();
+    void timerDisplay();
+
 
 private slots:
-    void on_pushButton_clicked();
-    void on_cancelSleeper_clicked();
+    void on_sleepTimerButton_clicked();
+    void on_exitButton_clicked();
+    void on_digitalClockButton_clicked();
+    void on_stopWatchButton_clicked();
+
+
+//protected:
+//void resizeEvent(QResizeEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
 
-    QTimer *_timer = nullptr;
-    QTimer *_counterUpdate = nullptr;
+    SleepTimer *_sleep;
+    QTimer *_timer;
 
-    int count;
 };
 
 #endif // MAINWINDOW_H
