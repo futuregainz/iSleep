@@ -6,10 +6,12 @@ SleepTimer::SleepTimer(QWidget *parent) :
     ui(new Ui::SleepTimer)
 {
     ui->setupUi(this);
-    _counterUpdate = new QTimer(this);
+    _sleepAndWatchCounter = new QTimer(this);
+    _watchCounter = new QTimer(this);
     _stopTimer = new QTimer(this);
     _timer = new QTimer(this);
-    connect(_counterUpdate, &QTimer::timeout, this, &SleepTimer::updateDisplay);
+    connect(_sleepAndWatchCounter, &QTimer::timeout, this, &SleepTimer::updateDisplay);
+    connect(_watchCounter, &QTimer::timeout, this, &SleepTimer::updateDisplay);
     ui->stopWatchStart->setVisible(false);
     ui->stopWatchStop->setVisible(false);
 }
@@ -22,7 +24,9 @@ SleepTimer::~SleepTimer()
 void SleepTimer::sendSleepSingals()
 {
     _timer->stop();
-    _counterUpdate->stop();
+    _sleepAndWatchCounter->stop();
+    _watchCounter->stop();
+    _stopTimer->stop();
     ui->startTimer->setEnabled(true);
     ui->amountToSleep->setEnabled(true);
     system("pmset sleepnow");
@@ -36,10 +40,12 @@ void SleepTimer::updateDisplay()
         ui->counter->setText(QTime::currentTime().toString("HH:mm:ss"));
         break;
     case timer:
-        ui->counter->setText(remainingTime(_timer->remainingTime()));
+        if (_timer->isActive())
+            ui->counter->setText(remainingTime(_timer->remainingTime()));
         break;
     case stopw:
-        ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
+        if (_stopTimer->isActive())
+            ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
         break;
     default:
         ui->counter->setText("00:00");
@@ -53,7 +59,8 @@ void SleepTimer::on_startTimer_clicked()
     count = ui->amountToSleep->text().trimmed().toInt(&valid);
     buttonClicked = timer;
 
-    _counterUpdate->start(1000);
+    if (!_sleepAndWatchCounter->isActive())
+        _sleepAndWatchCounter->start(1000);
 
     if (!valid)
     {
@@ -78,11 +85,11 @@ void SleepTimer::on_startTimer_clicked()
 
 void SleepTimer::on_cancelSleeper_clicked()
 {
-    if (_timer)
+    if (_timer->isActive())
         _timer->stop();
 
-    if (_counterUpdate)
-        _counterUpdate->stop();
+    if (_sleepAndWatchCounter->isActive())
+        _sleepAndWatchCounter->stop();
 
     ui->amountToSleep->setEnabled(true);
     ui->startTimer->setEnabled(true);
@@ -93,7 +100,8 @@ void SleepTimer::on_stopWatchStart_clicked()
     if (_stopTimer != nullptr)
         delete _stopTimer;
 
-    _counterUpdate->start(10);
+    if (!_watchCounter->isActive())
+        _watchCounter->start(10);
 
     _stopTimer = new QTimer(this);
 
@@ -102,15 +110,18 @@ void SleepTimer::on_stopWatchStart_clicked()
     _stopTimer->start();
 
     ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
+    ui->stopWatchStart->setEnabled(false);
 }
 
 void SleepTimer::on_stopWatchStop_clicked()
 {
-    if (_counterUpdate)
-        _counterUpdate->stop();
+    if (_watchCounter->isActive())
+        _watchCounter->stop();
 
     if (_stopTimer->isActive())
         _stopTimer->stop();
+
+    ui->stopWatchStart->setEnabled(true);
 }
 
 QString SleepTimer::remainingTime(int miliseconds)
@@ -123,13 +134,13 @@ QString SleepTimer::remainingTime(int miliseconds)
     if (miliseconds < milisecToMin)
     {
         writeTime = (buttonClicked == timer)? "00:00:" + prependZero(time.second()) :
-                                               prependZero(time.second()) + "." + prependZero(time.msec());
+                                              prependZero(time.second()) + "." + prependZero(time.msec());
     }
     else if (miliseconds < milisecsTohour)
     {
         writeTime = (buttonClicked == timer)? "00:" + prependZero(time.minute()) + ":" + prependZero(time.second()) :
-                                               prependZero(time.minute()) + ":" + prependZero(time.second()) + "." +
-                                               prependZero(time.msec());
+                                              prependZero(time.minute()) + ":" + prependZero(time.second()) + "." +
+                                              prependZero(time.msec());
     }
     else //longer than one hour
     {
@@ -151,12 +162,13 @@ void SleepTimer::setLableDisplay(const int &disType)
     case clock:
         ui->counter->setText(QTime::currentTime().toString("HH:mm:ss"));
         ui->controls->setVisible(false);
-        _counterUpdate->start(1000);
+        _sleepAndWatchCounter->start(1000);
         break;
     case timer:
-        _counterUpdate->start(1000);
-
+        //if (_timer->isActive())
         ui->counter->setText(remainingTime(_timer->remainingTime()));
+
+        _sleepAndWatchCounter->start(1000);
         ui->controls->setVisible(true);
         ui->label->setVisible(true);
         ui->amountToSleep->setVisible(true);
@@ -166,14 +178,13 @@ void SleepTimer::setLableDisplay(const int &disType)
         ui->stopWatchStop->setVisible(false);
         break;
     case stopw:
-        if (!_stopTimer->isActive())
-            _stopTimer->start();
+        //if (_stopTimer->isActive())
+        ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
 
-        _counterUpdate->start(100);
+        _watchCounter->start(10);
         ui->controls->setVisible(true);
         ui->label->setVisible(false);
         ui->amountToSleep->setVisible(false);
-        ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
         ui->startTimer->setVisible(false);
         ui->cancelSleeper->setVisible(false);
         ui->stopWatchStart->setVisible(true);

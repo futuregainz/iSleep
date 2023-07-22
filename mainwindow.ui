@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1020</width>
-    <height>550</height>
+    <width>1221</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -38,13 +38,13 @@
    <property name="minimumSize">
     <size>
      <width>1020</width>
-     <height>550</height>
+     <height>0</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>1020</width>
-     <height>550</height>
+     <width>16777206</width>
+     <height>16777215</height>
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -188,6 +188,12 @@
     </item>
     <item>
      <widget class="QFrame" name="dispFrame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Box</enum>
       </property>

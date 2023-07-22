@@ -53,7 +53,8 @@ private:
     QString remainingTime(int miliseconds);
 
     QTimer *_timer = nullptr;
-    QTimer *_counterUpdate = nullptr;
+    QTimer *_sleepAndWatchCounter = nullptr;
+    QTimer *_watchCounter = nullptr;
     QTimer *_stopTimer = nullptr;
 
     int buttonClicked = -1;
