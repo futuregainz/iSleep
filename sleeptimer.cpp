@@ -8,6 +8,8 @@ SleepTimer::SleepTimer(QWidget *parent) :
     ui->setupUi(this);
     _counterUpdate = new QTimer(this);
     _counterUpdate->start(1000);
+    _stopTimer = new QTimer(this);
+    _timer = new QTimer(this);
     connect(_counterUpdate, &QTimer::timeout, this, &SleepTimer::updateDisplay);
 }
 
@@ -33,10 +35,10 @@ void SleepTimer::updateDisplay()
         ui->counter->setText(QTime::currentTime().toString("HH:mm:ss"));
         break;
     case timer:
-        ui->counter->setText(remainingTime());
+        ui->counter->setText(remainingTime(_timer->remainingTime()));
         break;
     case stopw:
-        ui->counter->setText("00:00:00");
+        ui->counter->setText(remainingTime(_stopTimer->interval()));
         break;
     default:
         ui->counter->setText("00:00:00");
@@ -67,7 +69,7 @@ void SleepTimer::on_startTimer_clicked()
     _timer->setSingleShot(true);
     _timer->start();
 
-    ui->counter->setText(remainingTime());
+    ui->counter->setText(remainingTime(_timer->remainingTime()));
 
     connect(_timer, &QTimer::timeout, this, &SleepTimer::sendSleepSingals);
     ui->startTimer->setEnabled(false);
@@ -80,19 +82,21 @@ void SleepTimer::on_cancelSleeper_clicked()
         _timer->stop();
 
     if (_counterUpdate)
-    _counterUpdate->stop();
+        _counterUpdate->stop();
+
+    if (_stopTimer)
+        _stopTimer->stop();
 
     ui->amountToSleep->setEnabled(true);
     ui->startTimer->setEnabled(true);
 }
 
-QString SleepTimer::remainingTime()
+QString SleepTimer::remainingTime(int miliseconds)
 {
     if (!_timer)
         return "00:00:00";
 
     QString writeTime;
-    int miliseconds = _timer->remainingTime();
     QTime time(0,0,0,0);
     time = time.addMSecs(miliseconds);
 
@@ -115,8 +119,6 @@ QString SleepTimer::remainingTime()
 
 void SleepTimer::setLableDisplay(const int &disType)
 {
-    if (!_counterUpdate->isActive())
-        _counterUpdate->start();
 
     buttonClicked = disType;
 
@@ -127,16 +129,30 @@ void SleepTimer::setLableDisplay(const int &disType)
         ui->controls->setVisible(false);
         break;
     case timer:
-        ui->counter->setText(remainingTime());
+        if (!_counterUpdate->isActive())
+            _counterUpdate->start();
+
+        ui->counter->setText(remainingTime(_timer->remainingTime()));
         ui->controls->setVisible(true);
         ui->label->setVisible(true);
         ui->amountToSleep->setVisible(true);
+        ui->startTimer->setVisible(true);
+        ui->cancelSleeper->setVisible(true);
+        ui->stopWatchStart->setVisible(false);
+        ui->stopWatchStop->setVisible(false);
         break;
     case stopw:
+        if (!_stopTimer->isActive())
+            _stopTimer->start();
+
         ui->controls->setVisible(true);
         ui->label->setVisible(false);
         ui->amountToSleep->setVisible(false);
-        ui->counter->setText("00:00:00");
+        ui->counter->setText(remainingTime(_stopTimer->interval()));
+        ui->startTimer->setVisible(false);
+        ui->cancelSleeper->setVisible(false);
+        ui->stopWatchStart->setVisible(true);
+        ui->stopWatchStop->setVisible(true);
         break;
     default:
         ui->counter->setText("00:00:00");

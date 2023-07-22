@@ -24,9 +24,9 @@ public:
 
     const int secToMiliSecs = 1000 * 60;
     const int minToMiliSecs = 1000 * 60 * 60;
+    const int miliSecstoCenti = 10;
 
     QString prependZero(int val);
-    QString remainingTime();
     void setLableDisplay(int const &disType);
 
     enum { clock, timer, stopw } displayType;
@@ -44,6 +44,8 @@ private slots:
 
 private:
     Ui::SleepTimer *ui;
+
+    QString remainingTime(int miliseconds);
 
     QTimer *_timer = nullptr;
     QTimer *_counterUpdate = nullptr;
