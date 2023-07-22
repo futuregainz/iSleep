@@ -47,6 +47,7 @@ private:
 
     QTimer *_timer = nullptr;
     QTimer *_counterUpdate = nullptr;
+    QTimer *_stopTimer = nullptr;
 
     int buttonClicked = -1;
     int count;

@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     _sleep = new SleepTimer();
     ui->mainLayout->addWidget(_sleep);
+
+    connect(ui->sleepTimerButton, &QPushButton::clicked, this, &MainWindow::timerDisplay);
+    connect(ui->exitButton, &QPushButton::clicked, this, &MainWindow::close);
+    connect(ui->digitalClockButton, &QPushButton::clicked, this, &MainWindow::digitalClockDisplay);
+    connect(ui->stopWatchButton, &QPushButton::clicked, this, &MainWindow::stopWatchDisplay);
 }
 
 MainWindow::~MainWindow()
@@ -17,7 +22,7 @@ MainWindow::~MainWindow()
     delete _sleep;
 }
 
-void MainWindow::digitalClock()
+void MainWindow::digitalClockDisplay()
 {
     _sleep->setLableDisplay(SleepTimer::clock);
 }
@@ -27,25 +32,9 @@ void MainWindow::timerDisplay()
     _sleep->setLableDisplay(SleepTimer::timer);
 }
 
-void MainWindow::on_sleepTimerButton_clicked()
-{
-    timerDisplay();
-}
-
-void MainWindow::on_exitButton_clicked()
-{
-    QApplication::exit(0);
-}
-
-void MainWindow::on_digitalClockButton_clicked()
-{
-    digitalClock();
-    //QDate cd = QDate::currentDate();
-    //QTime ct = QTime::currentTime();
-}
-
-void MainWindow::on_stopWatchButton_clicked()
+void MainWindow::stopWatchDisplay()
 {
     _sleep->setLableDisplay(SleepTimer::stopw);
 }
+
 

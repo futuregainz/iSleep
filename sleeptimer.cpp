@@ -50,6 +50,9 @@ void SleepTimer::on_startTimer_clicked()
     count = ui->amountToSleep->text().trimmed().toInt(&valid);
     buttonClicked = timer;
 
+    if (!_counterUpdate->isActive())
+        _counterUpdate->start();
+
     if (!valid)
     {
         QMessageBox::critical(this, "Invalid Entry", "Enter number of minutes!", QMessageBox::Ok);

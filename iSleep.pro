@@ -1,7 +1,6 @@
 #-------------------------------------------------
 #
 # Project created by QtCreator 2022-01-12T18:10:54
-#
 #-------------------------------------------------
 
 QT       += core gui
@@ -30,15 +29,12 @@ CONFIG+=sdk_no_version_check
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        sleeptimer.cpp \
-        stopwatch.cpp
+        sleeptimer.cpp
 
 HEADERS += \
         mainwindow.h \
-        sleeptimer.h \
-        stopwatch.h
+        sleeptimer.h
 
 FORMS += \
         mainwindow.ui \
-        sleeptimer.ui \
-        stopwatch.ui
+        sleeptimer.ui
