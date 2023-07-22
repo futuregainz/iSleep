@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>465</height>
+    <width>1020</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -37,14 +37,14 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>795</width>
-     <height>465</height>
+     <width>1020</width>
+     <height>550</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>795</width>
-     <height>465</height>
+     <width>1020</width>
+     <height>550</height>
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -107,22 +107,6 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="sleepTimerButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Sleep Timer</string>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="digitalClockButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -132,6 +116,22 @@
          </property>
          <property name="text">
           <string>Clock</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sleepTimerButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Sleep Timer</string>
          </property>
          <property name="flat">
           <bool>true</bool>

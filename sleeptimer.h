@@ -22,9 +22,11 @@ public:
     explicit SleepTimer(QWidget *parent = nullptr);
     ~SleepTimer();
 
-    const int secToMiliSecs = 1000 * 60;
-    const int minToMiliSecs = 1000 * 60 * 60;
-    const int miliSecstoCenti = 10;
+    const int miliSectoCen = 100;
+    const int milisecToSec = 1000;
+    const int milisecToMin = milisecToSec * 60;
+    const int milisecsTohour = milisecToMin * 60;
+    const int _24hours = 24 * milisecsTohour;
 
     QString prependZero(int val);
     void setLableDisplay(int const &disType);
@@ -40,10 +42,13 @@ public slots:
 private slots:
     void on_cancelSleeper_clicked();
     void on_startTimer_clicked();
-
+    void on_stopWatchStart_clicked();
+    void on_stopWatchStop_clicked();
 
 private:
     Ui::SleepTimer *ui;
+
+    //void disableTimerButtons(bool enabled);
 
     QString remainingTime(int miliseconds);
 
