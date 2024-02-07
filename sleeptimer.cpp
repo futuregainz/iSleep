@@ -6,11 +6,11 @@ SleepTimer::SleepTimer(QWidget *parent) :
     ui(new Ui::SleepTimer)
 {
     ui->setupUi(this);
-    _sleepAndWatchCounter = new QTimer(this);
+    //_sleepAndWatchCounter = new QTimer(this);
     _watchCounter = new QTimer(this);
     _stopTimer = new QTimer(this);
     _timer = new QTimer(this);
-    connect(_sleepAndWatchCounter, &QTimer::timeout, this, &SleepTimer::updateDisplay);
+    //connect(_sleepAndWatchCounter, &QTimer::timeout, this, &SleepTimer::updateDisplay);
     connect(_watchCounter, &QTimer::timeout, this, &SleepTimer::updateDisplay);
     ui->stopWatchStart->setVisible(false);
     ui->stopWatchStop->setVisible(false);
@@ -24,7 +24,7 @@ SleepTimer::~SleepTimer()
 void SleepTimer::sendSleepSingals()
 {
     _timer->stop();
-    _sleepAndWatchCounter->stop();
+    //_sleepAndWatchCounter->stop();
     _watchCounter->stop();
     _stopTimer->stop();
     ui->startTimer->setEnabled(true);
@@ -37,7 +37,7 @@ void SleepTimer::updateDisplay()
     switch (buttonClicked)
     {
     case clock:
-        ui->counter->setText(QTime::currentTime().toString("HH:mm:ss"));
+        ui->counter->setText(QTime::currentTime().toString("HH:mm:ss.zzz"));
         break;
     case timer:
         if (_timer->isActive())
@@ -48,7 +48,6 @@ void SleepTimer::updateDisplay()
             ui->counter->setText(remainingTime(_24hours - _stopTimer->remainingTime()));
         break;
     default:
-        ui->counter->setText("00:00");
         break;
     }
 }
@@ -59,8 +58,8 @@ void SleepTimer::on_startTimer_clicked()
     count = ui->amountToSleep->text().trimmed().toInt(&valid);
     buttonClicked = timer;
 
-    if (!_sleepAndWatchCounter->isActive())
-        _sleepAndWatchCounter->start(1000);
+    //if (!_sleepAndWatchCounter->isActive())
+        //_sleepAndWatchCounter->start(1000);
 
     if (!valid)
     {
@@ -88,8 +87,8 @@ void SleepTimer::on_cancelSleeper_clicked()
     if (_timer->isActive())
         _timer->stop();
 
-    if (_sleepAndWatchCounter->isActive())
-        _sleepAndWatchCounter->stop();
+    //if (_sleepAndWatchCounter->isActive())
+        //_sleepAndWatchCounter->stop();
 
     ui->amountToSleep->setEnabled(true);
     ui->startTimer->setEnabled(true);
@@ -133,20 +132,15 @@ QString SleepTimer::remainingTime(int miliseconds)
     // if less than 60 seconds
     if (miliseconds < milisecToMin)
     {
-        writeTime = (buttonClicked == timer)? "00:00:" + prependZero(time.second()) :
-                                              prependZero(time.second()) + "." + prependZero(time.msec());
+        writeTime = prependZero(time.second()) + "." + prependZero(time.msec());
     }
     else if (miliseconds < milisecsTohour)
     {
-        writeTime = (buttonClicked == timer)? "00:" + prependZero(time.minute()) + ":" + prependZero(time.second()) :
-                                              prependZero(time.minute()) + ":" + prependZero(time.second()) + "." +
-                                              prependZero(time.msec());
+        writeTime = prependZero(time.minute()) + ":" + prependZero(time.second()) + "." + prependZero(time.msec());
     }
     else //longer than one hour
     {
-        writeTime = (buttonClicked == timer)? prependZero(time.hour()) + ":" + prependZero(time.minute()) + ":" + prependZero(time.second()):
-                                              prependZero(time.hour()) + ":" + prependZero(time.minute()) + ":" + prependZero(time.second()) +
-                                              "." + prependZero(time.msec());
+        writeTime = prependZero(time.hour()) + ":" + prependZero(time.minute()) + ":" + prependZero(time.second()) + "." + prependZero(time.msec());
     }
 
     return writeTime;
@@ -160,15 +154,17 @@ void SleepTimer::setLableDisplay(const int &disType)
     switch (buttonClicked)
     {
     case clock:
-        ui->counter->setText(QTime::currentTime().toString("HH:mm:ss"));
+        ui->counter->setText(QTime::currentTime().toString("HH:mm:ss.zzz"));
         ui->controls->setVisible(false);
-        _sleepAndWatchCounter->start(1000);
+        //_sleepAndWatchCounter->start(1000);
+        _watchCounter->start(10);
         break;
     case timer:
         //if (_timer->isActive())
         ui->counter->setText(remainingTime(_timer->remainingTime()));
 
-        _sleepAndWatchCounter->start(1000);
+        //_sleepAndWatchCounter->start(1000);
+        _watchCounter->start(10);
         ui->controls->setVisible(true);
         ui->label->setVisible(true);
         ui->amountToSleep->setVisible(true);
@@ -191,7 +187,6 @@ void SleepTimer::setLableDisplay(const int &disType)
         ui->stopWatchStop->setVisible(true);
         break;
     default:
-        ui->counter->setText("00:00:00");
         break;
     }
 }
